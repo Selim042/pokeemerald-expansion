@@ -620,7 +620,7 @@ void ShowStartMenu(void)
         PlayerFreeze();
         StopPlayerAvatar();
     }
-    CreateStartMenuTask(Task_ShowStartMenu);
+    CreateStartMenuTask(Task_ShowStartMenu);    
     LockPlayerFieldControls();
 }
 
@@ -879,7 +879,7 @@ static bool8 SaveCallback(void)
     {
     case SAVE_IN_PROGRESS:
         return FALSE;
-    case SAVE_CANCELED: // Back to start menu
+    case SAVE_CANCELED: // Back to start menu        
         ClearDialogWindowAndFrameToTransparent(0, FALSE);
         InitStartMenu();
         gMenuCallback = HandleStartMenuInput;

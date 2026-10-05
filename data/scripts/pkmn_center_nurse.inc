@@ -2,14 +2,43 @@ Common_EventScript_PkmnCenterNurse::
 	lock
 	faceplayer
 	setvar VAR_0x8004, 0
+	gettime
 .if !IS_FRLG
 	specialvar VAR_RESULT, CountPlayerTrainerStars
 	goto_if_eq VAR_RESULT, 4, EventScript_PkmnCenterNurse_GoldCard
 .endif
-	msgbox gText_WouldYouLikeToRestYourPkmn, MSGBOX_YESNO
+@ Start Added - Nurse Joy time of day greetings
+	switch VAR_0x8003
+	case 0, EventScript_PkmnCenterNurse_NurseIntro_Morning
+	case 1, EventScript_PkmnCenterNurse_NurseIntro_Day
+	case 2, EventScript_PkmnCenterNurse_NurseIntro_Evening
+	case 3, EventScript_PkmnCenterNurse_NurseIntro_Night
+	end
+
+EventScript_PkmnCenterNurse_NurseIntro_Morning::
+	msgbox gText_NurseIntro_Morning, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, YES, EventScript_PkmnCenterNurse_HealPkmn
 	goto_if_eq VAR_RESULT, NO, EventScript_PkmnCenterNurse_Goodbye
-	end
+	return
+
+EventScript_PkmnCenterNurse_NurseIntro_Day::
+	msgbox gText_NurseIntro_Day, MSGBOX_YESNO
+	goto_if_eq VAR_RESULT, YES, EventScript_PkmnCenterNurse_HealPkmn
+	goto_if_eq VAR_RESULT, NO, EventScript_PkmnCenterNurse_Goodbye
+	return
+
+EventScript_PkmnCenterNurse_NurseIntro_Evening::
+	msgbox gText_NurseIntro_Evening, MSGBOX_YESNO
+	goto_if_eq VAR_RESULT, YES, EventScript_PkmnCenterNurse_HealPkmn
+	goto_if_eq VAR_RESULT, NO, EventScript_PkmnCenterNurse_Goodbye
+	return
+
+EventScript_PkmnCenterNurse_NurseIntro_Night::
+	msgbox gText_NurseIntro_Night, MSGBOX_YESNO
+	goto_if_eq VAR_RESULT, YES, EventScript_PkmnCenterNurse_HealPkmn
+	goto_if_eq VAR_RESULT, NO, EventScript_PkmnCenterNurse_Goodbye
+	return
+@ End Added - Nurse Joy time of day greetings
 
 EventScript_PkmnCenterNurse_Goodbye::
 	message gText_WeHopeToSeeYouAgain
@@ -115,10 +144,38 @@ EventScript_PkmnCenterNurse_GoldCard::
 	return
 
 EventScript_PkmnCenterNurse_AskForUsual::
-	msgbox gText_YouWantTheUsual, MSGBOX_YESNO
+@ Start Added - Nurse Joy time of day greetings
+	switch VAR_0x8003
+	case 0, EventScript_PkmnCenterNurse_AskForUsual_Morning
+	case 1, EventScript_PkmnCenterNurse_AskForUsual_Day
+	case 2, EventScript_PkmnCenterNurse_AskForUsual_Evening
+	case 3, EventScript_PkmnCenterNurse_AskForUsual_Night
+	end
+
+EventScript_PkmnCenterNurse_AskForUsual_Morning::
+	msgbox gText_YouWantTheUsual_Morning, MSGBOX_YESNO
 	goto_if_eq VAR_RESULT, YES, EventScript_PkmnCenterNurse_GoldCardHealPkmn
-	message gText_WeHopeToSeeYouAgain2
+	goto_if_eq VAR_RESULT, NO, EventScript_PkmnCenterNurse_Goodbye
 	return
+
+EventScript_PkmnCenterNurse_AskForUsual_Day::
+	msgbox gText_YouWantTheUsual_Day, MSGBOX_YESNO
+	goto_if_eq VAR_RESULT, YES, EventScript_PkmnCenterNurse_GoldCardHealPkmn
+	goto_if_eq VAR_RESULT, NO, EventScript_PkmnCenterNurse_Goodbye
+	return
+
+EventScript_PkmnCenterNurse_AskForUsual_Evening::
+	msgbox gText_YouWantTheUsual_Evening, MSGBOX_YESNO
+	goto_if_eq VAR_RESULT, YES, EventScript_PkmnCenterNurse_GoldCardHealPkmn
+	goto_if_eq VAR_RESULT, NO, EventScript_PkmnCenterNurse_Goodbye
+	return
+
+EventScript_PkmnCenterNurse_AskForUsual_Night::
+	msgbox gText_YouWantTheUsual_Night, MSGBOX_YESNO
+	goto_if_eq VAR_RESULT, YES, EventScript_PkmnCenterNurse_GoldCardHealPkmn
+	goto_if_eq VAR_RESULT, NO, EventScript_PkmnCenterNurse_Goodbye
+	return
+@ End Added - Nurse Joy time of day greetings
 
 EventScript_PkmnCenterNurse_GoldCardHealPkmn::
 	setvar VAR_0x8004, 1

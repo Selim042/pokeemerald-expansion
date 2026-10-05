@@ -1091,6 +1091,12 @@ enum NationalDexOrder
 #endif
 
 #define FOREACH_SPECIES_IN_HOENN_DEX_ORDER(F) \
+    F(SQUIRTLE) \
+    F(WARTORTLE) \
+    F(BLASTOISE) \
+    F(GROOKEY) \
+    F(THWACKEY) \
+    F(RILLABOOM) \
     F(TREECKO) \
     F(GROVYLE) \
     F(SCEPTILE) \

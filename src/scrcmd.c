@@ -895,6 +895,10 @@ bool8 ScrCmd_gettime(struct ScriptContext *ctx)
     gSpecialVar_0x8000 = gLocalTime.hours;
     gSpecialVar_0x8001 = gLocalTime.minutes;
     gSpecialVar_0x8002 = gLocalTime.seconds;
+
+    /* Start Added - Nurse Joy time of day greetings */
+    gSpecialVar_0x8003 = GetTimeOfDay();
+    /* End Added - Nurse Joy time of day greetings */
     return FALSE;
 }
 

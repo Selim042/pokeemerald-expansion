@@ -426,3 +426,334 @@ MossdeepCity_Text_SootopolisNewGymLeader:
 	.string "People tell me the new LEADER once\n"
 	.string "mentored WALLACE.$"
 
+MossdeepCity_CUSTOM_EventScript_PlayersHouseSign::
+	msgbox MossdeepCity_CUSTOM_Text_PlayersHouse, MSGBOX_DEFAULT
+	releaseall
+	return
+
+MossdeepCity_CUSTOM_Text_PlayersHouse:
+	.string "{PLAYER}'s HOUSE$"
+
+MossdeepCity_CUSTOM_EventScript_OldRodFisherman::
+	lock
+	faceplayer
+	goto_if_set FLAG_RECEIVED_OLD_ROD, MossdeepCity_CUSTOM_EventScript_HowsFishing
+	msgbox MossdeepCity_CUSTOM_Text_GettingItchToFish, MSGBOX_YESNO
+	goto_if_eq VAR_RESULT, YES, MossdeepCity_CUSTOM_EventScript_GiveOldRod
+	goto_if_eq VAR_RESULT, NO, MossdeepCity_CUSTOM_EventScript_NotGettingItchToFish
+	end
+
+MossdeepCity_CUSTOM_EventScript_HowsFishing::
+	message DewfordTown_Text_HowsYourFishing
+	waitmessage
+	multichoice 20, 8, MULTI_HOWS_FISHING, TRUE
+	goto_if_eq VAR_RESULT, 0, DewfordTown_EventScript_FishingExcellent
+	goto_if_eq VAR_RESULT, 1, DewfordTown_EventScript_FishingNotSoGood
+	end
+
+MossdeepCity_CUSTOM_EventScript_NotGettingItchToFish::
+	msgbox MossdeepCity_CUSTOM_Text_ThatsTooBadThen, MSGBOX_DEFAULT
+	release
+	end
+
+MossdeepCity_CUSTOM_EventScript_GiveOldRod::
+	msgbox MossdeepCity_CUSTOM_Text_GiveYouOneOfMyRods, MSGBOX_DEFAULT
+	giveitem ITEM_OLD_ROD
+	goto_if_eq VAR_RESULT, FALSE, Common_EventScript_ShowBagIsFull
+	setflag FLAG_RECEIVED_OLD_ROD
+	msgbox MossdeepCity_CUSTOM_Text_ThrowInFishingAdvice, MSGBOX_DEFAULT
+	release
+	end
+
+MossdeepCity_CUSTOM_Text_GettingItchToFish:
+	.string "This is a renowned fishing spot.\n"
+	.string "Are you getting the itch to fish?$"
+
+MossdeepCity_CUSTOM_Text_ThatsTooBadThen:
+	.string "Oh, is that so?\n"
+	.string "That's too bad, then.$"
+	
+MossdeepCity_CUSTOM_Text_GiveYouOneOfMyRods:
+	.string "I hear you, and I like what\n"
+	.string "you're saying!\p"
+	.string "I'll give you one of my fishing RODS.$"
+
+MossdeepCity_CUSTOM_Text_ThrowInFishingAdvice:
+	.string "And, as an added bonus, I'll even throw\n"
+	.string "in a little fishing advice!\p"
+	.string "First, you want to face the water,\n"
+	.string "then use the ROD.\p"
+	.string "Focus your mind…\n"
+	.string "If you get a bite, pull on the ROD.\p"
+	.string "Sometimes you can snag something\n"
+	.string "immediately, but with bigger catches,\l"
+	.string "you need to time the pulls on your ROD\l"
+	.string "to haul them in.$"
+
+
+MossdeepCity_CUSTOM_EventScript_SailToLilycove::
+	setobjectsubpriority LOCALID_MOSSDEEPCITY_BRINEY, MAP_MOSSDEEP_CITY, 0
+	setobjectsubpriority LOCALID_PLAYER, MAP_MOSSDEEP_CITY, 0
+
+	applymovement LOCALID_MOSSDEEPCITY_BRINEY, MossdeepCity_CUSTOM_Movement_BrineyBoardBoat
+	waitmovement 0
+	removeobject LOCALID_MOSSDEEPCITY_BRINEY
+
+	applymovement LOCALID_MOSSDEEPCITY_PEEKO, MossdeepCity_CUSTOM_Movement_PeekoBoardBoat
+	waitmovement 0
+	removeobject LOCALID_MOSSDEEPCITY_PEEKO
+
+	call_if_eq VAR_FACING, DIR_SOUTH, MossdeepCity_CUSTOM_PlayerBoardBoatSouth
+	call_if_eq VAR_FACING, DIR_WEST, MossdeepCity_CUSTOM_PlayerBoardBoatWest
+	waitmovement 0
+	hideobjectat LOCALID_PLAYER, MAP_MOSSDEEP_CITY
+
+	call Common_EventScript_PlayBrineysBoatMusic
+	applymovement LOCALID_MOSSDEEP_BOAT, MossdeepCity_CUSTOM_Movement_SailToLilycove
+	applymovement LOCALID_PLAYER, MossdeepCity_CUSTOM_Movement_SailToLilycove
+	waitmovement LOCALID_MOSSDEEP_BOAT, MAP_LILYCOVE_CITY
+	waitmovement 0
+	goto MossdeepCity_CUSTOM_EventScript_ArriveInLilycove
+
+MossdeepCity_CUSTOM_PlayerBoardBoatSouth::
+	applymovement LOCALID_PLAYER, MossdeepCity_CUSTOM_Movement_PlayerBoardBoatSouth
+	waitmovement 0
+	return
+
+MossdeepCity_CUSTOM_PlayerBoardBoatWest::
+	applymovement LOCALID_PLAYER, MossdeepCity_CUSTOM_Movement_PlayerBoardBoatWest
+	waitmovement 0
+	return
+
+MossdeepCity_CUSTOM_Movement_BrineyBoardBoat:
+	walk_down
+	walk_down
+	step_end
+
+MossdeepCity_CUSTOM_Movement_PeekoBoardBoat:
+	walk_right
+	walk_down
+	walk_down
+	step_end
+
+MossdeepCity_CUSTOM_Movement_PlayerBoardBoatSouth:
+	walk_down
+	walk_down
+	step_end
+
+MossdeepCity_CUSTOM_Movement_PlayerBoardBoatWest:
+	walk_left
+	walk_down
+	step_end
+
+MossdeepCity_CUSTOM_EventScript_ArriveInLilycove::
+	@delay 50
+	@applymovement LOCALID_PLAYER, MossdeepCity_CUSTOM_Movement_LilycovePlayerExitBoat
+	@waitmovement 0
+	@call Common_EventScript_StopBrineysBoatMusic
+	@showobjectat LOCALID_PLAYER, MAP_LILYCOVE_CITY
+	@applymovement LOCALID_PLAYER, MossdeepCity_CUSTOM_Movement_PlayerMoveForBriney
+	@waitmovement 0
+	@setobjectxyperm LOCALID_LILYCOVE_BRINEY, 65, 15
+	@addobject LOCALID_LILYCOVE_BRINEY
+	@setobjectsubpriority LOCALID_LILYCOVE_BRINEY, MAP_LILYCOVE_CITY, 0
+	@clearflag FLAG_HIDE_MR_BRINEY_DEWFORD_TOWN
+	@applymovement LOCALID_LILYCOVE_BRINEY, MossdeepCity_CUSTOM_Movement_BrineyExitBoat
+	@waitmovement 0
+	@addobject LOCALID_LILYCOVE_BOAT
+	@clearflag FLAG_HIDE_MR_BRINEY_BOAT_DEWFORD_TOWN
+	@call Common_EventScript_StopBrineysBoatMusic
+	@setflag FLAG_HIDE_ROUTE_104_MR_BRINEY_BOAT
+	@hideobjectat LOCALID_MOSSDEEP_BOAT, MAP_MOSSDEEP_CITY
+	@copyvar VAR_BRINEY_LOCATION, VAR_0x8008
+	@resetobjectsubpriority LOCALID_PLAYER, MAP_MOSSDEEP_CITY
+	@resetobjectsubpriority LOCALID_LILYCOVE_BRINEY, MAP_LILYCOVE_CITY
+	@copyobjectxytoperm LOCALID_LILYCOVE_BRINEY
+	@setvar VAR_BOARD_BRINEY_BOAT_STATE, 0
+	releaseall
+	end
+
+MossdeepCity_CUSTOM_Movement_LilycovePlayerExitBoat:
+	walk_down
+
+MossdeepCity_CUSTOM_Movement_PlayerMoveForBriney:
+	walk_down
+
+MossdeepCity_CUSTOM_Movement_BrineyExitBoat:
+	walk_down
+
+MossdeepCity_CUSTOM_Movement_SailToLilycove:
+	walk_down
+	walk_left
+	walk_left
+	walk_left
+	walk_left
+	walk_left
+	walk_left
+	walk_left
+	walk_left
+	walk_left
+	walk_left
+	walk_left
+	walk_left
+	walk_left
+	walk_left
+	walk_left
+	walk_left
+	walk_left
+	walk_left
+	walk_left
+	walk_left
+	walk_left
+	walk_left
+	walk_left
+	walk_left
+	walk_left
+	walk_up
+	walk_up
+	walk_up
+
+	walk_left
+	walk_left
+	walk_left
+	walk_fast_left
+	walk_fast_left
+	walk_fast_left
+	walk_fast_left
+	walk_fast_left
+	walk_fast_left
+	walk_fast_left
+	walk_fast_left
+	walk_fast_left
+	walk_fast_left
+	walk_left
+	walk_left
+	walk_left
+	walk_up
+	walk_up
+	walk_up
+	walk_fast_up
+	walk_fast_up
+	walk_fast_up
+	walk_fast_up
+	walk_fast_up
+	walk_fast_up
+	walk_fast_up
+	walk_fast_up
+	walk_fast_up
+	walk_fast_up
+	walk_fast_up
+	walk_fast_up
+	walk_fast_up
+	walk_fast_up
+	walk_up
+	walk_up
+	walk_up
+	walk_left
+	walk_left
+	walk_left
+	walk_fast_left
+	walk_fast_left
+	walk_fast_left
+	walk_faster_left
+	walk_faster_left
+	walk_faster_left
+	walk_faster_left
+	walk_faster_left
+	walk_faster_left
+	walk_fast_left
+	walk_fast_left
+	walk_fast_left
+	walk_left
+	walk_left
+	walk_left
+	walk_up
+	walk_up
+	walk_up
+	walk_fast_up
+	walk_fast_up
+	walk_fast_up
+	walk_faster_up
+	walk_faster_up
+	walk_faster_up
+	walk_faster_up
+	walk_faster_up
+	walk_faster_up
+	walk_faster_up
+	walk_faster_up
+	walk_faster_up
+	walk_faster_up
+	walk_faster_up
+	walk_fast_up
+	walk_fast_up
+	walk_fast_up
+	walk_up
+	walk_up
+	walk_up
+
+	walk_left
+	walk_left
+	walk_left
+	walk_fast_left
+	walk_fast_left
+	walk_fast_left
+	walk_faster_left
+	walk_faster_left
+	walk_faster_left
+	walk_faster_left
+	walk_faster_left
+	walk_faster_left
+	walk_faster_left
+	walk_faster_left
+	walk_faster_left
+	walk_faster_left
+	walk_faster_left
+	walk_faster_left
+	walk_faster_left
+	walk_faster_left
+	walk_faster_left
+	walk_faster_left
+	walk_faster_left
+	walk_faster_left
+	walk_faster_left
+	walk_faster_left
+	walk_faster_left
+	walk_faster_left
+	walk_faster_left
+	walk_faster_left
+	walk_faster_left
+	walk_faster_left
+	walk_faster_left
+	walk_faster_left
+	walk_faster_left
+	walk_faster_left
+	walk_fast_left
+	walk_fast_left
+	walk_fast_left
+	walk_left
+	walk_left
+	walk_left
+
+	walk_up
+	walk_up
+	walk_up
+	walk_up
+	walk_left
+	walk_left
+	walk_left
+	walk_fast_left
+	walk_fast_left
+	walk_fast_left
+	walk_fast_left
+	walk_fast_left
+	walk_fast_left
+	walk_fast_left
+	walk_left
+	walk_left
+	walk_left
+	walk_left
+	walk_left
+	walk_left
+	walk_left
+	walk_left
+	walk_down

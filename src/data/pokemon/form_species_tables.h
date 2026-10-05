@@ -28,6 +28,7 @@ static const u16 sCharizardFormSpeciesIdTable[] = {
 #if P_FAMILY_SQUIRTLE
 static const u16 sBlastoiseFormSpeciesIdTable[] = {
     SPECIES_BLASTOISE,
+    SPECIES_BLASTOISE_HOENN,
 #if P_MEGA_EVOLUTIONS
     SPECIES_BLASTOISE_MEGA,
 #endif
@@ -2093,6 +2094,7 @@ static const u16 sMelmetalFormSpeciesIdTable[] = {
 #if P_FAMILY_GROOKEY
 static const u16 sRillaboomFormSpeciesIdTable[] = {
     SPECIES_RILLABOOM,
+    SPECIES_RILLABOOM_HOENN,
 #if P_GIGANTAMAX_FORMS
     SPECIES_RILLABOOM_GMAX,
 #endif
@@ -2438,6 +2440,14 @@ static const u16 sCalyrexFormSpeciesIdTable[] = {
 static const u16 sEnamorusFormSpeciesIdTable[] = {
     SPECIES_ENAMORUS_INCARNATE,
     SPECIES_ENAMORUS_THERIAN,
+    FORM_SPECIES_END,
+};
+#endif //P_FAMILY_ENAMORUS
+
+#if P_FAMILY_FUECOCO
+static const u16 sSkeledirgeFormSpeciesIdTable[] = {
+    SPECIES_SKELEDIRGE,
+    SPECIES_SKELEDIRGE_HOENN,
     FORM_SPECIES_END,
 };
 #endif //P_FAMILY_ENAMORUS

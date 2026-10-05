@@ -1,87 +1,300 @@
 MossdeepCity_GameCorner_1F_MapScripts::
-	map_script MAP_SCRIPT_ON_FRAME_TABLE, MossdeepCity_GameCorner_1F_OnFrame
-	map_script MAP_SCRIPT_ON_WARP_INTO_MAP_TABLE, MossdeepCity_GameCorner_1F_OnWarp
-	map_script MAP_SCRIPT_ON_LOAD, CableClub_OnLoad
 	.byte 0
 
-MossdeepCity_GameCorner_1F_OnWarp:
-	map_script_2 VAR_CABLE_CLUB_STATE, USING_MINIGAME, CableClub_EventScript_CheckTurnAttendant
+MossdeepCity_CUSTOM_PlayerHouse_1F_MapScripts::
+	map_script MAP_SCRIPT_ON_LOAD, MossdeepCity_CUSTOM_PlayerHouse_1F_OnLoad
+	map_script MAP_SCRIPT_ON_TRANSITION, MossdeepCity_CUSTOM_PlayerHouse_1F_OnTransition
+	map_script MAP_SCRIPT_ON_FRAME_TABLE, MossdeepCity_CUSTOM_PlayerHouse_1F_OnFrame
+	.byte 0
+
+MossdeepCity_CUSTOM_PlayerHouse_1F_OnLoad:
+	call_if_lt VAR_LITTLEROOT_INTRO_STATE, 6, MossdeepCity_CUSTOM_PlayerHouse_1F_EventScript_SetMovingBoxes
+	call_if_set FLAG_RECEIVED_RUNNING_SHOES, MossdeepCity_CUSTOM_PlayerHouse_1F_EventScript_CheckShowShoesManual
+	end
+
+MossdeepCity_CUSTOM_PlayerHouse_1F_EventScript_SetMovingBoxes::
+	setmetatile 5, 4, METATILE_BrendansMaysHouse_MovingBox_Open, TRUE
+	setmetatile 5, 2, METATILE_BrendansMaysHouse_MovingBox_Closed, TRUE
+	return
+
+MossdeepCity_CUSTOM_PlayerHouse_1F_EventScript_CheckShowShoesManual::
+	checkplayergender
+	goto_if_eq VAR_RESULT, MALE, MossdeepCity_CUSTOM_PlayerHouse_1F_EventScript_ShowRunningShoesManual
+	return
+
+MossdeepCity_CUSTOM_PlayerHouse_1F_EventScript_ShowRunningShoesManual::
+	setmetatile 3, 7, METATILE_BrendansMaysHouse_BookOnTable, TRUE
+	return
+
+MossdeepCity_CUSTOM_PlayerHouse_1F_OnTransition:
+	call_if_eq VAR_LITTLEROOT_INTRO_STATE, 3, MossdeepCity_CUSTOM_PlayerHouse_1F_EventScript_MoveMomToDoor
+	call_if_eq VAR_LITTLEROOT_INTRO_STATE, 5, MossdeepCity_CUSTOM_PlayerHouse_1F_EventScript_MoveMomToStairs
+	call_if_eq VAR_LITTLEROOT_INTRO_STATE, 6, MossdeepCity_CUSTOM_PlayerHouse_1F_EventScript_MoveMomToTV
+	end
+
+MossdeepCity_CUSTOM_PlayerHouse_1F_EventScript_MoveMomToStairs::
+	setobjectxyperm LOCALID_PLAYERS_HOUSE_1F_MOM, 8, 4
+	setobjectmovementtype LOCALID_PLAYERS_HOUSE_1F_MOM, MOVEMENT_TYPE_FACE_UP
+	return
+
+MossdeepCity_CUSTOM_PlayerHouse_1F_EventScript_MoveMomToTV::
+	setobjectxyperm LOCALID_PLAYERS_HOUSE_1F_MOM, 4, 5
+	setobjectmovementtype LOCALID_PLAYERS_HOUSE_1F_MOM, MOVEMENT_TYPE_FACE_UP
+	return
+
+MossdeepCity_CUSTOM_PlayerHouse_1F_EventScript_MoveMomToDoor::
+	setobjectxyperm LOCALID_PLAYERS_HOUSE_1F_MOM, 9, 8
+	setobjectmovementtype LOCALID_PLAYERS_HOUSE_1F_MOM, MOVEMENT_TYPE_FACE_UP
+	return
+
+@ Many of the below scripts have no gender check because they assume youre in the correct house
+@ The below SS Ticket script uses Mays house state by accident(?), but theyre both set identically after the intro
+MossdeepCity_CUSTOM_PlayerHouse_1F_OnFrame:
+	map_script_2 VAR_LITTLEROOT_INTRO_STATE, 3, MossdeepCity_CUSTOM_PlayerHouse_1F_EventScript_EnterHouseMovingIn
+	map_script_2 VAR_LITTLEROOT_INTRO_STATE, 5, MossdeepCity_CUSTOM_PlayerHouse_1F_EventScript_GoUpstairsToSetClock
+	map_script_2 VAR_LITTLEROOT_INTRO_STATE, 6, MossdeepCity_CUSTOM_PlayerHouse_1F_EventScript_PetalburgGymReport
+	map_script_2 VAR_LITTLEROOT_HOUSES_STATE_MAY, 1, MossdeepCity_CUSTOM_PlayerHouse_1F_EventScript_YoureNewNeighbor
+	map_script_2 VAR_LITTLEROOT_HOUSES_STATE_MAY, 3, PlayersHouse_1F_EventScript_GetSSTicketAndSeeLatiTV
 	.2byte 0
 
-MossdeepCity_GameCorner_1F_OnFrame:
-	map_script_2 VAR_CABLE_CLUB_STATE, USING_MINIGAME, CableClub_EventScript_ExitMinigameRoom
-	.2byte 0
-
-@ Script is redundant, the label in the goto also does lock and faceplayer
-MossdeepCity_GameCorner_1F_EventScript_InfoMan::
-	lock
-	faceplayer
-	goto MossdeepCity_GameCorner_1F_EventScript_InfoMan2
-	release
+MossdeepCity_CUSTOM_PlayerHouse_1F_EventScript_GoUpstairsToSetClock::
+	lockall
+	msgbox PlayersHouse_1F_Text_GoSetTheClock, MSGBOX_DEFAULT
+	closemessage
+	applymovement LOCALID_PLAYER, MossdeepCity_CUSTOM_PlayerHouse_1F_Movement_PushTowardStairs
+	applymovement LOCALID_PLAYERS_HOUSE_1F_MOM, MossdeepCity_CUSTOM_PlayerHouse_1F_Movement_PushTowardStairs
+	waitmovement 0
+	warp MAP_LITTLEROOT_TOWN_BRENDANS_HOUSE_2F, 7, 1
+	waitstate
+	releaseall
 	end
 
-@ Script is redundant, the label in the goto also does lock and faceplayer
-MossdeepCity_GameCorner_1F_EventScript_OldMan::
-	lock
-	faceplayer
-	goto MossdeepCity_GameCorner_1F_EventScript_OldMan2
-	release
+MossdeepCity_CUSTOM_PlayerHouse_1F_Movement_PushTowardStairs:
+	walk_up
+	step_end
+
+MossdeepCity_CUSTOM_PlayerHouse_1F_EventScript_EnterHouseMovingIn::
+	lockall
+	setvar VAR_0x8004, LOCALID_PLAYERS_HOUSE_1F_MOM
+	setvar VAR_0x8005, MALE
+	goto PlayersHouse_1F_EventScript_EnterHouseMovingIn
 	end
 
-
-@ Everything below is leftover from RS
-@ The house that was here in RS was moved to Sootopolis and replaced by the Game Corner
-@ The text below is unused and duplicated in its replacement in Sootopolis City
-@ And the BG Door event was moved inaccessibly into a wall
-
-RS_MysteryEventsHouse_EventScript_Door::
-	msgbox RS_MysteryEventsHouse_Text_DoorIsLocked, MSGBOX_SIGN
+MossdeepCity_CUSTOM_PlayerHouse_1F_EventScript_PetalburgGymReport::
+	lockall
+	setvar VAR_0x8004, MALE
+	setvar VAR_0x8005, LOCALID_PLAYERS_HOUSE_1F_MOM
+	goto PlayersHouse_1F_EventScript_PetalburgGymReportMale
 	end
 
-RS_MysteryEventsHouse_Text_OldManGreeting:
-	.string "When I was young, I traveled the world\n"
-	.string "as a POKéMON TRAINER.\p"
-	.string "Now that I've become an old buzzard,\n"
-	.string "my only amusement is watching young\l"
-	.string "TRAINERS battle.$"
+MossdeepCity_CUSTOM_PlayerHouse_1F_EventScript_YoureNewNeighbor::
+	lockall
+	playse SE_PIN
+	applymovement LOCALID_RIVALS_HOUSE_1F_MOM, Common_Movement_ExclamationMark
+	waitmovement 0
+	applymovement LOCALID_RIVALS_HOUSE_1F_MOM, Common_Movement_Delay48
+	waitmovement 0
+	applymovement LOCALID_PLAYER, Common_Movement_WalkInPlaceFasterLeft
+	applymovement LOCALID_RIVALS_HOUSE_1F_MOM, MossdeepCity_CUSTOM_PlayerHouse_1F_Movement_RivalMomApproach
+	waitmovement 0
+	special GetRivalSonDaughterString
+	msgbox RivalsHouse_1F_Text_OhYoureTheNewNeighbor, MSGBOX_DEFAULT
+	setflag FLAG_MET_RIVAL_MOM
+	setvar VAR_LITTLEROOT_HOUSES_STATE_MAY, 2
+	releaseall
+	end
 
-RS_MysteryEventsHouse_Text_DoorIsLocked:
-	.string "The door appears to be locked.$"
+MossdeepCity_CUSTOM_PlayerHouse_1F_Movement_RivalMomApproach:
+	walk_down
+	walk_right
+	walk_right
+	walk_right
+	walk_right
+	walk_right
+	step_end
 
-RS_MysteryEventsHouse_Text_ChallengeVisitingTrainer:
-	.string "A TRAINER named {STR_VAR_1} is\n"
-	.string "visiting my home.\p"
-	.string "Would you like to challenge\n"
-	.string "{STR_VAR_1}?$"
+MossdeepCity_CUSTOM_PlayerHouse_1F_EventScript_Mom::
+	msgbox LittlerootTown_Text_WearTheseRunningShoes, MSGBOX_DEFAULT
+	playfanfare MUS_OBTAIN_ITEM
+	message LittlerootTown_Text_SwitchShoesWithRunningShoes
+	waitfanfare
+	setflag FLAG_RECEIVED_RUNNING_SHOES
+	msgbox LittlerootTown_Text_ExplainRunningShoes, MSGBOX_DEFAULT
+	msgbox LittlerootTown_Text_ComeHomeIfAnythingHappens, MSGBOX_DEFAULT
+	closemessage
+	delay 30
+	return
 
-RS_MysteryEventsHouse_Text_YouWontBattle:
-	.string "You won't battle? I'm disappointed\n"
-	.string "that I can't see you battle…$"
+MossdeepCity_CUSTOM_PlayerHouse_1F_EventScript_GoSeeRoom::
+	lockall
+	setvar VAR_0x8004, LOCALID_PLAYERS_HOUSE_1F_MOM
+	setvar VAR_0x8005, MALE
+	applymovement VAR_0x8004, Common_Movement_WalkInPlaceFasterLeft
+	waitmovement 0
+	goto PlayersHouse_1F_EventScript_MomGoSeeRoom
+	end
 
-RS_MysteryEventsHouse_Text_KeepItToA3On3:
-	.string "Oh, good, good!\p"
-	.string "But my house isn't all that sturdy.\p"
-	.string "Could I ask you to keep it down to\n"
-	.string "a 3-on-3 match?$"
+MossdeepCity_CUSTOM_PlayerHouse_1F_EventScript_MeetRival0::
+	lockall
+	setvar VAR_0x8008, 0
+	goto MossdeepCity_CUSTOM_PlayerHouse_1F_EventScript_MeetRival
+	end
 
-RS_MysteryEventsHouse_Text_SaveYourProgress:
-	.string "Before you two battle, you should\n"
-	.string "save your progress.$"
+MossdeepCity_CUSTOM_PlayerHouse_1F_EventScript_MeetRival1::
+	lockall
+	setvar VAR_0x8008, 1
+	goto MossdeepCity_CUSTOM_PlayerHouse_1F_EventScript_MeetRival
+	end
 
-RS_MysteryEventsHouse_Text_HopeToSeeAGoodMatch:
-	.string "I hope to see a good match!$"
+MossdeepCity_CUSTOM_PlayerHouse_1F_EventScript_MeetRival2::
+	lockall
+	setvar VAR_0x8008, 2
+	goto MossdeepCity_CUSTOM_PlayerHouse_1F_EventScript_MeetRival
+	end
 
-RS_MysteryEventsHouse_Text_BattleTie:
-	.string "So, it became a standoff.\p"
-	.string "It was a brilliant match in which\n"
-	.string "neither side conceded a step!$"
+MossdeepCity_CUSTOM_PlayerHouse_1F_EventScript_MeetRival::
+	playse SE_EXIT
+	delay 10
+	addobject LOCALID_RIVALS_HOUSE_1F_RIVAL
+	delay 30
+	playse SE_PIN
+	applymovement LOCALID_RIVALS_HOUSE_1F_RIVAL, Common_Movement_ExclamationMark
+	waitmovement 0
+	applymovement LOCALID_RIVALS_HOUSE_1F_RIVAL, Common_Movement_Delay48
+	waitmovement 0
+	call_if_ne VAR_0x8008, 1, MossdeepCity_CUSTOM_PlayerHouse_1F_EventScript_PlayerFaceBrendan
+	playbgm MUS_ENCOUNTER_BRENDAN, TRUE
+	call_if_eq VAR_0x8008, 0, MossdeepCity_CUSTOM_PlayerHouse_1F_EventScript_BrendanApproachPlayer0
+	call_if_eq VAR_0x8008, 1, MossdeepCity_CUSTOM_PlayerHouse_1F_EventScript_BrendanApproachPlayer1
+	call_if_eq VAR_0x8008, 2, MossdeepCity_CUSTOM_PlayerHouse_1F_EventScript_BrendanApproachPlayer2
+	msgbox RivalsHouse_1F_Text_BrendanWhoAreYou, MSGBOX_DEFAULT
+	closemessage
+	call_if_eq VAR_0x8008, 0, MossdeepCity_CUSTOM_PlayerHouse_1F_EventScript_BrendanGoUpstairs0
+	call_if_eq VAR_0x8008, 1, MossdeepCity_CUSTOM_PlayerHouse_1F_EventScript_BrendanGoUpstairs1
+	call_if_eq VAR_0x8008, 2, MossdeepCity_CUSTOM_PlayerHouse_1F_EventScript_BrendanGoUpstairs2
+	playse SE_EXIT
+	removeobject LOCALID_RIVALS_HOUSE_1F_RIVAL
+	setflag FLAG_HIDE_LITTLEROOT_TOWN_BRENDANS_HOUSE_BRENDAN
+	setflag FLAG_HIDE_LITTLEROOT_TOWN_BRENDANS_HOUSE_2F_POKE_BALL
+	clearflag FLAG_HIDE_LITTLEROOT_TOWN_BRENDANS_HOUSE_RIVAL_BEDROOM
+	delay 30
+	setvar VAR_LITTLEROOT_RIVAL_STATE, 3
+	setvar VAR_LITTLEROOT_TOWN_STATE, 1
+	savebgm MUS_DUMMY
+	fadedefaultbgm
+	releaseall
+	end
 
-RS_MysteryEventsHouse_Text_BattleWon:
-	.string "That was superlative!\p"
-	.string "Why, it was like seeing myself in\n"
-	.string "my youth again!$"
+MossdeepCity_CUSTOM_PlayerHouse_1F_EventScript_PlayerFaceBrendan::
+	applymovement LOCALID_PLAYER, Common_Movement_WalkInPlaceFasterDown
+	waitmovement 0
+	return
 
-RS_MysteryEventsHouse_Text_BattleLost:
-	.string "Ah, too bad for you!\p"
-	.string "But it was a good match.\n"
-	.string "I hope you can win next time.$"
+MossdeepCity_CUSTOM_PlayerHouse_1F_EventScript_BrendanApproachPlayer0::
+	applymovement LOCALID_RIVALS_HOUSE_1F_RIVAL, MossdeepCity_CUSTOM_PlayerHouse_1F_Movement_BrendanApproachPlayer0
+	waitmovement 0
+	return
+
+MossdeepCity_CUSTOM_PlayerHouse_1F_EventScript_BrendanApproachPlayer1::
+	applymovement LOCALID_RIVALS_HOUSE_1F_RIVAL, MossdeepCity_CUSTOM_PlayerHouse_1F_Movement_BrendanApproachPlayer1
+	waitmovement 0
+	return
+
+MossdeepCity_CUSTOM_PlayerHouse_1F_EventScript_BrendanApproachPlayer2::
+	applymovement LOCALID_RIVALS_HOUSE_1F_RIVAL, MossdeepCity_CUSTOM_PlayerHouse_1F_Movement_BrendanApproachPlayer2
+	waitmovement 0
+	return
+
+MossdeepCity_CUSTOM_PlayerHouse_1F_Movement_BrendanApproachPlayer0:
+	walk_in_place_faster_left
+	walk_left
+	walk_in_place_faster_up
+	walk_up
+	walk_up
+	walk_up
+	walk_up
+	step_end
+
+MossdeepCity_CUSTOM_PlayerHouse_1F_Movement_BrendanApproachPlayer1:
+	walk_up
+	walk_up
+	walk_up
+	step_end
+
+MossdeepCity_CUSTOM_PlayerHouse_1F_Movement_BrendanApproachPlayer2:
+	walk_in_place_faster_right
+	walk_right
+	walk_in_place_faster_up
+	walk_up
+	walk_up
+	walk_up
+	walk_up
+	step_end
+
+MossdeepCity_CUSTOM_PlayerHouse_1F_EventScript_BrendanGoUpstairs0::
+	applymovement LOCALID_PLAYER, MossdeepCity_CUSTOM_PlayerHouse_1F_Movement_PlayerWatchBrendanExit0
+	applymovement LOCALID_RIVALS_HOUSE_1F_RIVAL, MossdeepCity_CUSTOM_PlayerHouse_1F_Movement_BrendanGoUpstairs0
+	waitmovement 0
+	return
+
+MossdeepCity_CUSTOM_PlayerHouse_1F_EventScript_BrendanGoUpstairs1::
+	applymovement LOCALID_PLAYER, MossdeepCity_CUSTOM_PlayerHouse_1F_Movement_PlayerWatchBrendanExit1
+	applymovement LOCALID_RIVALS_HOUSE_1F_RIVAL, MossdeepCity_CUSTOM_PlayerHouse_1F_Movement_BrendanGoUpstairs1
+	waitmovement 0
+	return
+
+MossdeepCity_CUSTOM_PlayerHouse_1F_EventScript_BrendanGoUpstairs2::
+	applymovement LOCALID_PLAYER, MossdeepCity_CUSTOM_PlayerHouse_1F_Movement_PlayerWatchBrendanExit2
+	applymovement LOCALID_RIVALS_HOUSE_1F_RIVAL, MossdeepCity_CUSTOM_PlayerHouse_1F_Movement_BrendanGoUpstairs2
+	waitmovement 0
+	return
+
+MossdeepCity_CUSTOM_PlayerHouse_1F_Movement_PlayerWatchBrendanExit0:
+	delay_16
+	delay_8
+	walk_in_place_faster_right
+	step_end
+
+MossdeepCity_CUSTOM_PlayerHouse_1F_Movement_PlayerWatchBrendanExit1:
+	delay_16
+	delay_8
+	walk_in_place_faster_right
+	delay_16
+	delay_16
+	walk_in_place_faster_up
+	step_end
+
+MossdeepCity_CUSTOM_PlayerHouse_1F_Movement_PlayerWatchBrendanExit2:
+	delay_16
+	delay_8
+	walk_in_place_faster_left
+	step_end
+
+MossdeepCity_CUSTOM_PlayerHouse_1F_Movement_BrendanGoUpstairs0:
+	walk_in_place_faster_right
+	walk_right
+	walk_in_place_faster_up
+	walk_up
+	walk_up
+	step_end
+
+MossdeepCity_CUSTOM_PlayerHouse_1F_Movement_BrendanGoUpstairs1:
+	walk_in_place_faster_right
+	walk_right
+	walk_in_place_faster_up
+	walk_up
+	walk_up
+	walk_in_place_faster_left
+	walk_left
+	walk_in_place_faster_up
+	walk_up
+	step_end
+
+MossdeepCity_CUSTOM_PlayerHouse_1F_Movement_BrendanGoUpstairs2:
+	walk_in_place_faster_left
+	walk_left
+	walk_in_place_faster_up
+	walk_up
+	walk_up
+	step_end
+

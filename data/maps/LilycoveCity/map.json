@@ -3,7 +3,6 @@
   "name": "LilycoveCity",
   "layout": "LAYOUT_LILYCOVE_CITY",
   "music": "MUS_LILYCOVE",
-  "region": "REGION_HOENN",
   "region_map_section": "MAPSEC_LILYCOVE_CITY",
   "requires_flash": false,
   "weather": "WEATHER_SUNNY",
@@ -326,6 +325,34 @@
       "trainer_sight_or_berry_tree_id": "LIGHT_TYPE_PKMN_CENTER_SIGN",
       "script": "NULL",
       "flag": "0"
+    },
+    {
+      "local_id": "LOCALID_LILYCOVE_BOAT",
+      "graphics_id": "OBJ_EVENT_GFX_MR_BRINEYS_BOAT",
+      "x": 65,
+      "y": 14,
+      "elevation": 0,
+      "movement_type": "MOVEMENT_TYPE_FACE_UP",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "NULL",
+      "flag": "FLAG_HIDE_MR_BRINEY_BOAT_DEWFORD_TOWN"
+    },
+    {
+      "local_id": "LOCALID_LILYCOVE_BRINEY",
+      "graphics_id": "OBJ_EVENT_GFX_EXPERT_M",
+      "x": 65,
+      "y": 15,
+      "elevation": 0,
+      "movement_type": "MOVEMENT_TYPE_NONE",
+      "movement_range_x": 0,
+      "movement_range_y": 0,
+      "trainer_type": "TRAINER_TYPE_NONE",
+      "trainer_sight_or_berry_tree_id": "0",
+      "script": "NULL",
+      "flag": "FLAG_HIDE_MR_BRINEY_DEWFORD_TOWN"
     }
   ],
   "warp_events": [
@@ -534,5 +561,6 @@
       "item": "ITEM_POKE_BALL",
       "flag": "FLAG_HIDDEN_ITEM_LILYCOVE_CITY_POKE_BALL"
     }
-  ]
+  ],
+  "region": "REGION_HOENN"
 }

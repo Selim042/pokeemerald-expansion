@@ -188,18 +188,6 @@ bool32 Overworld_RecvKeysFromLinkIsRunning(void);
 bool32 Overworld_SendKeysToLinkIsRunning(void);
 bool32 IsSendingKeysOverCable(void);
 void ClearLinkPlayerObjectEvents(void);
-bool16 SetTimeOfDay(u16 hours);
-bool8 MetatileBehavior_IsSurfableInSeafoamIslands(u16 metatileBehavior);
-
-// Item Description Headers
-enum ItemObtainFlags
-{
-    FLAG_GET_ITEM_OBTAINED,
-    FLAG_SET_ITEM_OBTAINED,
-};
-bool8 GetSetItemObtained(enum Item item, enum ItemObtainFlags caseId);
-
-void Overworld_CreditsMainCB(void);
-bool32 Overworld_DoScrollSceneForCredits(u8 *, const struct CreditsOverworldCmd *);
+void CB2_ReturnToFullScreenStartMenu(void);
 
 #endif // GUARD_OVERWORLD_H
