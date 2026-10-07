@@ -12,5 +12,8 @@ void CB2_SetUpSaveAfterLinkBattle(void);
 void SaveForBattleTowerLink(void);
 void HideStartMenu(void);
 void AppendToList(u8 *list, u8 *pos, u8 newEntry);
+/* Start added - Full screen menu */
+void SaveStartCallback_FullStartMenu(void);
+/* End added - Full screen menu */
 
 #endif // GUARD_START_MENU_H

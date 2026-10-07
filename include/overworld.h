@@ -190,6 +190,9 @@ bool32 IsSendingKeysOverCable(void);
 void ClearLinkPlayerObjectEvents(void);
 bool16 SetTimeOfDay(u16 hours);
 bool8 MetatileBehavior_IsSurfableInSeafoamIslands(u16 metatileBehavior);
+/* Added start - Full screen menu */
+void CB2_ReturnToFullScreenStartMenu(void);
+/* Added end - Full screen menu */
 
 // Item Descripton Headers
 enum ItemObtainFlags
