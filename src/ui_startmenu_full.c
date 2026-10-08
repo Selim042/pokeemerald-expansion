@@ -51,6 +51,8 @@
 #include "pokemon.h"
 #include "pokemon_summary_screen.h"
 
+#include "quests.h"
+
 /*
     Full Screen Start Menu
 
@@ -1366,7 +1368,6 @@ void Task_OpenPokedexFromStartMenu(u8 taskId)
     }
 }
 
-// TODO: replace this with quest menu
 void Task_OpenPokemonPartyFromStartMenu(u8 taskId)
 {
     if (!gPaletteFade.active)
@@ -1375,6 +1376,17 @@ void Task_OpenPokemonPartyFromStartMenu(u8 taskId)
         PlayRainStoppingSoundEffect();
         CleanupOverworldWindowsAndTilemaps();
         SetMainCallback2(CB2_PartyMenuFromStartMenu);
+    }
+}
+
+void Task_OpenQuestMenuFromStartMenu(u8 taskId)
+{
+    if (!gPaletteFade.active)
+    {
+        StartMenuFull_FreeResources();
+        PlayRainStoppingSoundEffect();
+        CleanupOverworldWindowsAndTilemaps();
+        QuestMenu_Init(0, CB2_ReturnToFullScreenStartMenu);
     }
 }
 
@@ -1563,7 +1575,8 @@ static void Task_StartMenuFullMain(u8 taskId)
                 {
                     PlaySE(SE_SELECT);
                     BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 16, RGB_BLACK);
-                    gTasks[taskId].func = Task_OpenPokemonPartyFromStartMenu;
+                    // CreateTask(Task_QuestMenu_OpenFromStartMenu, 0);
+                    gTasks[taskId].func = Task_OpenQuestMenuFromStartMenu;
                 }
                 else
                 {
