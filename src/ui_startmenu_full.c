@@ -1538,12 +1538,11 @@ static void Task_StartMenuFullMain(u8 taskId)
         {
             case START_MENU_PARTY_1:
                 PlaySE(SE_SELECT);
-                // HandleChooseMonSelection(taskId, 0);
-                ShowPokemonSummaryScreen(0, gParties[B_TRAINER_PLAYER], 0, gPartiesCount[B_TRAINER_PLAYER] - 1, CB2_ReturnToFullScreenStartMenu);
+                ShowPokemonSummaryScreen(SUMMARY_MODE_NORMAL, gParties[B_TRAINER_PLAYER], 0, gPartiesCount[B_TRAINER_PLAYER] - 1, CB2_ReturnToFullScreenStartMenu);
                 break;
             case START_MENU_PARTY_2:
                 PlaySE(SE_SELECT);
-                ShowPokemonSummaryScreen(0, gParties[B_TRAINER_PLAYER], 1, gPartiesCount[B_TRAINER_PLAYER] - 1, CB2_ReturnToFullScreenStartMenu);
+                ShowPokemonSummaryScreen(SUMMARY_MODE_NORMAL, gParties[B_TRAINER_PLAYER], 1, gPartiesCount[B_TRAINER_PLAYER] - 1, CB2_ReturnToFullScreenStartMenu);
                 break;
             case START_MENU_BAG:
                 PlaySE(SE_SELECT);
@@ -1564,24 +1563,18 @@ static void Task_StartMenuFullMain(u8 taskId)
                 break;
             case START_MENU_PARTY_3:
                 PlaySE(SE_SELECT);
-                ShowPokemonSummaryScreen(0, gParties[B_TRAINER_PLAYER], 2, gPartiesCount[B_TRAINER_PLAYER] - 1, CB2_ReturnToFullScreenStartMenu);
+                ShowPokemonSummaryScreen(SUMMARY_MODE_NORMAL, gParties[B_TRAINER_PLAYER], 2, gPartiesCount[B_TRAINER_PLAYER] - 1, CB2_ReturnToFullScreenStartMenu);
                 break;
             case START_MENU_PARTY_4:
                 PlaySE(SE_SELECT);
-                ShowPokemonSummaryScreen(0, gParties[B_TRAINER_PLAYER], 3, gPartiesCount[B_TRAINER_PLAYER] - 1, CB2_ReturnToFullScreenStartMenu);
+                ShowPokemonSummaryScreen(SUMMARY_MODE_NORMAL, gParties[B_TRAINER_PLAYER], 3, gPartiesCount[B_TRAINER_PLAYER] - 1, CB2_ReturnToFullScreenStartMenu);
+                // CreateSelectionWindow(taskId);
                 break;
             case START_MENU_PARTY:
-                if(FlagGet(FLAG_SYS_POKEMON_GET))
-                {
-                    PlaySE(SE_SELECT);
-                    BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 16, RGB_BLACK);
-                    // CreateTask(Task_QuestMenu_OpenFromStartMenu, 0);
-                    gTasks[taskId].func = Task_OpenQuestMenuFromStartMenu;
-                }
-                else
-                {
-                    PlaySE(SE_BOO);
-                }
+                PlaySE(SE_SELECT);
+                BeginNormalPaletteFade(PALETTES_ALL, 0, 0, 16, RGB_BLACK);
+                CreateTask(Task_QuestMenu_OpenFromStartMenu, 0);
+                // gTasks[taskId].func = Task_OpenQuestMenuFromStartMenu;
                 break;
             case START_MENU_MAP:
                 if(FlagGet(FLAG_SYS_POKENAV_GET))
@@ -1596,11 +1589,11 @@ static void Task_StartMenuFullMain(u8 taskId)
                 break;
             case START_MENU_PARTY_5:
                 PlaySE(SE_SELECT);
-                ShowPokemonSummaryScreen(0, gParties[B_TRAINER_PLAYER], 4, gPartiesCount[B_TRAINER_PLAYER] - 1, CB2_ReturnToFullScreenStartMenu);
+                ShowPokemonSummaryScreen(SUMMARY_MODE_NORMAL, gParties[B_TRAINER_PLAYER], 4, gPartiesCount[B_TRAINER_PLAYER] - 1, CB2_ReturnToFullScreenStartMenu);
                 break;
             case START_MENU_PARTY_6:
                 PlaySE(SE_SELECT);
-                ShowPokemonSummaryScreen(0, gParties[B_TRAINER_PLAYER], 5, gPartiesCount[B_TRAINER_PLAYER] - 1, CB2_ReturnToFullScreenStartMenu);
+                ShowPokemonSummaryScreen(SUMMARY_MODE_NORMAL, gParties[B_TRAINER_PLAYER], 5, gPartiesCount[B_TRAINER_PLAYER] - 1, CB2_ReturnToFullScreenStartMenu);
                 break;
             case START_MENU_CARD:
                 PlaySE(SE_SELECT);
